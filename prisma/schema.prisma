@@ -1,0 +1,106 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  password      String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Profile
+  weight        Float?
+  height        Float?
+  age           Int?
+  goal          String?   // health | body | strong | pro
+
+  // Progress
+  currentWeek   Int       @default(1)
+  totalWorkouts Int       @default(0)
+  streak        Int       @default(0)
+  lastWorkout   DateTime?
+
+  // Relations
+  workouts      Workout[]
+  challenges    Challenge[]
+  personalRecords PersonalRecord[]
+  skills        Skill[]
+  achievements  Achievement[]
+
+  @@map("users")
+}
+
+model Workout {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  weekNumber  Int
+  dayNumber   Int       // 0=Sun 1=Mon ... 6=Sat
+  duration    Int       @default(0)  // seconds
+  completedAt DateTime  @default(now())
+  isRest      Boolean   @default(false)
+
+  // Exercise sets stored as JSON
+  exerciseSets String   @default("{}")  // { "exercise-id": setsCompleted }
+
+  @@unique([userId, weekNumber, dayNumber])
+  @@map("workouts")
+}
+
+model Challenge {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  weekNumber  Int
+  dayNumber   Int
+  progress    Int       @default(0)
+  completed   Boolean   @default(false)
+  completedAt DateTime?
+
+  @@unique([userId, weekNumber, dayNumber])
+  @@map("challenges")
+}
+
+model PersonalRecord {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  exercise  String   // exercise id
+  value     Float    // reps or seconds
+  type      String   // reps | seconds
+  recordAt  DateTime @default(now())
+
+  @@map("personal_records")
+}
+
+model Skill {
+  id       String  @id @default(cuid())
+  userId   String
+  user     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skillKey String  // pistol | muscleup | handstand | frontlever
+  unlockedAt DateTime @default(now())
+
+  @@unique([userId, skillKey])
+  @@map("skills")
+}
+
+model Achievement {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievementId String
+  unlockedAt   DateTime @default(now())
+
+  @@unique([userId, achievementId])
+  @@map("achievements")
+}
