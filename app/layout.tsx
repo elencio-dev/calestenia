@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Barlow_Condensed, DM_Sans } from 'next/font/google'
 import './globals.css'
 import { Providers } from './providers'
+import { ThemeProvider } from '@/components/ThemeProvider'
 
 const barlowCondensed = Barlow_Condensed({
   subsets: ['latin'],
@@ -38,9 +39,11 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt-BR" className={`${barlowCondensed.variable} ${dmSans.variable}`}>
+    <html lang="pt-BR" className={`${barlowCondensed.variable} ${dmSans.variable}`} suppressHydrationWarning>
       <body>
-        <Providers>{children}</Providers>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <Providers>{children}</Providers>
+        </ThemeProvider>
       </body>
     </html>
   )

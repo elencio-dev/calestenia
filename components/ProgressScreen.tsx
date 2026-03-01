@@ -45,7 +45,7 @@ export function ProgressScreen() {
           <div>
             <p style={{ ...S.label(phase.color) }}>FASE ATUAL</p>
             <h2 style={{ ...S.title(28, phase.color), marginTop: 4 }}>{phase.name}</h2>
-            <p style={{ fontSize: 12, color: '#555', marginTop: 4 }}>{phase.goal}</p>
+            <p style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 4 }}>{phase.goal}</p>
           </div>
         </div>
 
@@ -78,27 +78,27 @@ export function ProgressScreen() {
               : 0
             return (
               <div key={p.id} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <span style={{ flexShrink: 0 }}><LucideIcon name={p.icon} size={16} color={isActive ? p.color : isPast ? '#4ADE80' : '#444'} /></span>
+                <span style={{ flexShrink: 0 }}><LucideIcon name={p.icon} size={16} color={isActive ? p.color : isPast ? 'var(--accent-success)' : 'var(--text-muted)'} /></span>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
                     <span style={{
                       fontFamily: 'var(--font-barlow)', fontWeight: 700, fontSize: 12,
-                      color: isActive ? p.color : isPast ? '#4ADE80' : '#333',
+                      color: isActive ? p.color : isPast ? 'var(--accent-success)' : 'var(--text-muted)',
                       letterSpacing: 1,
                     }}>
                       {p.name} {isActive ? '← VOCÊ' : isPast ? '✓' : ''}
                     </span>
-                    <span style={{ fontSize: 11, color: '#444' }}>Sem. {p.weeks[0]}–{p.weeks[1]}</span>
+                    <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>Sem. {p.weeks[0]}–{p.weeks[1]}</span>
                   </div>
-                  <div style={{ background: '#111', borderRadius: 999, height: 5, overflow: 'hidden' }}>
+                  <div style={{ background: 'var(--bg-elevated)', borderRadius: 999, height: 5, overflow: 'hidden' }}>
                     <div style={{
                       width: `${progress}%`, height: '100%',
-                      background: isPast ? '#4ADE80' : `linear-gradient(90deg,${p.color},${p.color}aa)`,
+                      background: isPast ? 'var(--accent-success)' : `linear-gradient(90deg,${p.color},${p.color}aa)`,
                       borderRadius: 999, transition: 'width 0.5s ease',
                     }} />
                   </div>
                 </div>
-                <span style={{ fontSize: 11, color: '#444', flexShrink: 0 }}>{progress}%</span>
+                <span style={{ fontSize: 11, color: 'var(--text-muted)', flexShrink: 0 }}>{progress}%</span>
               </div>
             )
           })}
@@ -116,10 +116,10 @@ export function ProgressScreen() {
                 height: w.workouts > 0 ? `${Math.max(10, (w.workouts / maxW) * 70)}px` : 4,
                 background: w.week === userData.currentWeek
                   ? 'linear-gradient(180deg,#F97316,#F59E0B)'
-                  : w.workouts > 0 ? '#2a2a2a' : '#111',
+                  : w.workouts > 0 ? 'var(--bg-elevated)' : 'var(--bg-card)',
                 transition: 'height 0.4s ease',
               }} />
-              <span style={{ fontSize: 9, color: '#333', fontFamily: 'var(--font-barlow)', fontWeight: 700 }}>
+              <span style={{ fontSize: 9, color: 'var(--text-muted)', fontFamily: 'var(--font-barlow)', fontWeight: 700 }}>
                 {w.week > 0 ? `S${w.week}` : ''}
               </span>
             </div>
@@ -138,25 +138,25 @@ export function ProgressScreen() {
                 key={skill.key}
                 onClick={() => !unlocked && unlockSkill(skill.key)}
                 style={{
-                  background: unlocked ? 'rgba(74,222,128,0.1)' : 'rgba(255,255,255,0.02)',
-                  border: `1px solid ${unlocked ? 'rgba(74,222,128,0.3)' : 'rgba(255,255,255,0.06)'}`,
+                  background: unlocked ? 'rgba(74,222,128,0.1)' : 'var(--bg-card)',
+                  border: `1px solid ${unlocked ? 'rgba(74,222,128,0.3)' : 'var(--border-subtle)'}`,
                   borderRadius: 12, padding: 14, cursor: unlocked ? 'default' : 'pointer',
                   textAlign: 'left', transition: 'all 0.2s',
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
                   <span style={{ display: 'flex' }}>
-                    {unlocked ? <CheckCircle2 size={24} color="#4ADE80" /> : <LucideIcon name={skill.icon} size={24} color="#666" />}
+                    {unlocked ? <CheckCircle2 size={24} color="#4ADE80" /> : <LucideIcon name={skill.icon} size={24} color="var(--text-muted)" />}
                   </span>
                   {unlocked && <Badge color="#4ADE80" sm>DESBLOQUEADO</Badge>}
                 </div>
                 <p style={{
                   fontFamily: 'var(--font-barlow)', fontWeight: 700, fontSize: 14,
-                  color: unlocked ? '#4ADE80' : '#666', margin: 0,
+                  color: unlocked ? '#4ADE80' : 'var(--text-muted)', margin: 0,
                 }}>
                   {skill.name}
                 </p>
-                {!unlocked && <p style={{ fontSize: 11, color: '#444', marginTop: 4 }}>Toque quando conseguir!</p>}
+                {!unlocked && <p style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 4 }}>Toque quando conseguir!</p>}
               </button>
             )
           })}
@@ -179,21 +179,21 @@ export function ProgressScreen() {
               <LucideIcon name={a.icon} size={24} color="#F97316" />
               <div>
                 <p style={{ fontFamily: 'var(--font-barlow)', fontWeight: 700, fontSize: 14, color: '#F97316', margin: 0 }}>{a.name}</p>
-                <p style={{ fontSize: 12, color: '#555', margin: '2px 0 0' }}>{a.desc}</p>
+                <p style={{ fontSize: 12, color: 'var(--text-muted)', margin: '2px 0 0' }}>{a.desc}</p>
               </div>
             </div>
           ))}
           {newAchievements.slice(0, 5).map(a => (
             <div key={a.id} style={{
               display: 'flex', alignItems: 'center', gap: 12,
-              background: 'rgba(255,255,255,0.02)',
-              border: '1px solid rgba(255,255,255,0.05)',
+              background: 'var(--bg-card)',
+              border: '1px solid var(--border-subtle)',
               borderRadius: 10, padding: '10px 14px',
             }}>
-              <LucideIcon name={a.icon} size={24} color="#444" />
+              <LucideIcon name={a.icon} size={24} color="var(--text-muted)" />
               <div>
-                <p style={{ fontFamily: 'var(--font-barlow)', fontWeight: 700, fontSize: 14, color: '#444', margin: 0 }}>{a.name}</p>
-                <p style={{ fontSize: 12, color: '#333', margin: '2px 0 0' }}>{a.desc}</p>
+                <p style={{ fontFamily: 'var(--font-barlow)', fontWeight: 700, fontSize: 14, color: 'var(--text-muted)', margin: 0 }}>{a.name}</p>
+                <p style={{ fontSize: 12, color: 'var(--text-muted)', margin: '2px 0 0' }}>{a.desc}</p>
               </div>
             </div>
           ))}

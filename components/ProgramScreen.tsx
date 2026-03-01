@@ -18,7 +18,7 @@ export function ProgramScreen() {
       <div style={{ marginBottom: 18 }}>
         <p style={S.label()}>VISÃO GERAL DO PROGRAMA</p>
         <h2 style={{ ...S.title(28), marginTop: 8 }}>52 Semanas de Calistenia</h2>
-        <p style={{ fontSize: 13, color: '#555', marginTop: 6, lineHeight: 1.5 }}>
+        <p style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 6, lineHeight: 1.5 }}>
           Do iniciante absoluto ao ginasta — um programa completo e progressivo.
         </p>
       </div>
@@ -39,8 +39,8 @@ export function ProgramScreen() {
               onClick={() => setExpandedPhase(expanded ? null : phase.id)}
               style={{
                 width: '100%', display: 'flex', alignItems: 'center', gap: 12,
-                background: isActive ? `${phase.color}12` : 'rgba(255,255,255,0.02)',
-                border: `1px solid ${isActive ? phase.color + '40' : 'rgba(255,255,255,0.07)'}`,
+                background: isActive ? `${phase.color}12` : 'var(--bg-card)',
+                border: `1px solid ${isActive ? phase.color + '40' : 'var(--border-subtle)'}`,
                 borderRadius: 14, padding: '14px 16px', cursor: 'pointer',
                 transition: 'all 0.2s',
               }}
@@ -50,26 +50,26 @@ export function ProgramScreen() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
                   <span style={{
                     fontFamily: 'var(--font-barlow)', fontWeight: 800, fontSize: 18,
-                    color: isActive ? phase.color : isPast ? '#4ADE80' : '#fff',
+                    color: isActive ? phase.color : isPast ? 'var(--accent-success)' : 'var(--text-base)',
                   }}>
                     {phase.name}
                   </span>
                   {isActive && <Badge color={phase.color} sm>ATUAL</Badge>}
                   {isPast && <Badge color="#4ADE80" sm>✓ COMPLETO</Badge>}
                 </div>
-                <p style={{ margin: '3px 0 0', fontSize: 11, color: '#555' }}>
+                <p style={{ margin: '3px 0 0', fontSize: 11, color: 'var(--text-muted)' }}>
                   Semanas {phase.weeks[0]}–{phase.weeks[1]} · {phase.goal}
                 </p>
               </div>
-              <span style={{ color: '#444', fontSize: 18, transition: 'transform 0.2s', transform: expanded ? 'rotate(180deg)' : 'none' }}>
+              <span style={{ color: 'var(--text-muted)', fontSize: 18, transition: 'transform 0.2s', transform: expanded ? 'rotate(180deg)' : 'none' }}>
                 ▾
               </span>
             </button>
 
             {expanded && (
               <div style={{
-                background: 'rgba(255,255,255,0.01)',
-                border: '1px solid rgba(255,255,255,0.05)',
+                background: 'var(--bg-elevated)',
+                border: '1px solid var(--border-subtle)',
                 borderRadius: '0 0 14px 14px', padding: 14,
                 borderTop: 'none',
               }}>
@@ -79,11 +79,11 @@ export function ProgramScreen() {
                       key={w}
                       onClick={() => setSelectedWeek(selectedWeek === w ? null : w)}
                       style={{
-                        background: selectedWeek === w ? phase.color : w === userData.currentWeek ? `${phase.color}20` : 'rgba(255,255,255,0.03)',
-                        border: `1px solid ${selectedWeek === w ? 'transparent' : w === userData.currentWeek ? phase.color + '50' : 'rgba(255,255,255,0.08)'}`,
+                        background: selectedWeek === w ? phase.color : w === userData.currentWeek ? `${phase.color}20` : 'var(--bg-card)',
+                        border: `1px solid ${selectedWeek === w ? 'transparent' : w === userData.currentWeek ? phase.color + '50' : 'var(--border-subtle)'}`,
                         borderRadius: 8, padding: '5px 10px', cursor: 'pointer',
                         fontFamily: 'var(--font-barlow)', fontWeight: 700, fontSize: 12,
-                        color: selectedWeek === w ? '#fff' : w === userData.currentWeek ? phase.color : '#555',
+                        color: selectedWeek === w ? 'var(--text-base)' : w === userData.currentWeek ? phase.color : 'var(--text-muted)',
                         letterSpacing: 0.5,
                       }}
                     >
@@ -104,7 +104,7 @@ export function ProgramScreen() {
                           return (
                             <div key={d} style={{
                               display: 'flex', alignItems: 'center', gap: 10,
-                              background: 'rgba(255,255,255,0.02)',
+                              background: 'var(--bg-card)',
                               border: `1px solid ${dp.color}20`,
                               borderRadius: 8, padding: '8px 12px',
                             }}>
@@ -118,11 +118,11 @@ export function ProgramScreen() {
                                 {DN[d]}
                               </div>
                               <div style={{ flex: 1, minWidth: 0 }}>
-                                <p style={{ fontFamily: 'var(--font-barlow)', fontWeight: 700, fontSize: 13, color: dp.rest ? '#444' : '#ccc', margin: 0 }}>
+                                <p style={{ fontFamily: 'var(--font-barlow)', fontWeight: 700, fontSize: 13, color: dp.rest ? 'var(--text-muted)' : 'var(--text-base)', margin: 0 }}>
                                   {dp.name}
                                 </p>
                                 {!dp.rest && dp.exercises && (
-                                  <p style={{ fontSize: 11, color: '#444', margin: '2px 0 0' }}>
+                                  <p style={{ fontSize: 11, color: 'var(--text-muted)', margin: '2px 0 0' }}>
                                     {dp.exercises.length} exercícios · {dp.exercises.reduce((a, e) => a + e.sets, 0)} séries
                                   </p>
                                 )}
@@ -153,10 +153,10 @@ export function ProgramScreen() {
           { icon: '📈', title: 'Paciência + Consistência', desc: '52 semanas parece muito. São só 4 dias por semana. Você consegue.' },
         ].map(p => (
           <div key={p.title} style={{ display: 'flex', gap: 12, marginBottom: 12, alignItems: 'flex-start' }}>
-            <span style={{ flexShrink: 0 }}><LucideIcon name={p.icon} size={22} color="#ccc" /></span>
+            <span style={{ flexShrink: 0 }}><LucideIcon name={p.icon} size={22} color="var(--text-muted)" /></span>
             <div>
-              <p style={{ fontFamily: 'var(--font-barlow)', fontWeight: 700, fontSize: 14, color: '#ccc', margin: 0 }}>{p.title}</p>
-              <p style={{ fontSize: 12, color: '#555', margin: '3px 0 0', lineHeight: 1.5 }}>{p.desc}</p>
+              <p style={{ fontFamily: 'var(--font-barlow)', fontWeight: 700, fontSize: 14, color: 'var(--text-base)', margin: 0 }}>{p.title}</p>
+              <p style={{ fontSize: 12, color: 'var(--text-muted)', margin: '3px 0 0', lineHeight: 1.5 }}>{p.desc}</p>
             </div>
           </div>
         ))}

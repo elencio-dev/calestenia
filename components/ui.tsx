@@ -6,21 +6,21 @@ import { Trophy, Compass, ArrowRight, ArrowLeftRight, Crown, CornerRightUp, Star
 // Design tokens
 export const S = {
   card: (extra: React.CSSProperties = {}): React.CSSProperties => ({
-    background: 'rgba(255,255,255,0.03)',
-    border: '1px solid rgba(255,255,255,0.07)',
+    background: 'var(--bg-card)',
+    border: '1px solid var(--border-subtle)',
     borderRadius: 14,
     padding: 18,
     ...extra,
   }),
-  label: (col = '#555'): React.CSSProperties => ({
+  label: (col = 'var(--text-muted)'): React.CSSProperties => ({
     margin: 0, fontSize: 10, color: col, letterSpacing: 3,
     fontFamily: 'var(--font-barlow)', fontWeight: 700, textTransform: 'uppercase' as const,
   }),
-  title: (sz = 24, col = '#fff'): React.CSSProperties => ({
+  title: (sz = 24, col = 'var(--text-base)'): React.CSSProperties => ({
     margin: 0, fontFamily: 'var(--font-barlow)', fontWeight: 800,
     fontSize: sz, color: col, letterSpacing: 0.5, lineHeight: 1,
   }),
-  btn: (bg = '#F97316', sz: 'sm' | 'md' | 'lg' = 'md', extra: React.CSSProperties = {}): React.CSSProperties => ({
+  btn: (bg = 'var(--accent-primary)', sz: 'sm' | 'md' | 'lg' = 'md', extra: React.CSSProperties = {}): React.CSSProperties => ({
     background: bg, border: 'none', borderRadius: 9, cursor: 'pointer', color: '#fff',
     fontFamily: 'var(--font-barlow)', fontWeight: 700,
     fontSize: sz === 'lg' ? 18 : sz === 'sm' ? 11 : 14,

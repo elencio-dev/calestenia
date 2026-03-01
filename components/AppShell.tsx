@@ -5,7 +5,8 @@ import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { useUserData, UserDataProvider } from '@/contexts/UserDataContext'
 import { getCurrentPhase } from '@/lib/program-data'
-import { Dumbbell, Flame, TrendingUp, ClipboardList, User } from 'lucide-react'
+import { Dumbbell, Flame, TrendingUp, ClipboardList, User, Moon, Sun } from 'lucide-react'
+import { useTheme } from 'next-themes'
 import { LucideIcon } from './ui'
 import { OnboardingScreen } from './OnboardingScreen'
 
@@ -23,7 +24,7 @@ function Header() {
       justifyContent: 'space-between',
       position: 'sticky',
       top: 0,
-      background: 'rgba(8,8,8,0.97)',
+      background: 'var(--bg-base)',
       backdropFilter: 'blur(20px)',
       zIndex: 50,
       paddingTop: 'max(12px, env(safe-area-inset-top))',
@@ -41,16 +42,16 @@ function Header() {
         <div>
           <p style={{
             margin: 0, fontFamily: 'var(--font-barlow)', fontWeight: 800,
-            fontSize: 20, letterSpacing: 2, color: '#fff',
+            fontSize: 20, letterSpacing: 2, color: 'var(--text-base)',
           }}>
-            CALISTENIA <span style={{ color: '#F97316' }}>PRO</span>
+            CALISTENIA <span style={{ color: 'var(--accent-primary)' }}>PRO</span>
           </p>
           <p style={{
-            margin: 0, fontSize: 10, color: '#444', letterSpacing: 1,
+            margin: 0, fontSize: 10, color: 'var(--text-muted)', letterSpacing: 1,
             fontFamily: 'var(--font-barlow)', fontWeight: 700,
             display: 'flex', alignItems: 'center', gap: 4
           }}>
-            SEM. {userData.currentWeek} · <LucideIcon name={phase.icon} size={10} color="#666" /> {phase.name}
+            SEM. {userData.currentWeek} · <LucideIcon name={phase.icon} size={10} color="var(--text-muted)" /> {phase.name}
           </p>
         </div>
       </div>
@@ -68,16 +69,41 @@ function Header() {
           </div>
         )}
         <div style={{
-          background: 'rgba(255,255,255,0.04)',
+          background: 'var(--bg-card)',
+          border: '1px solid var(--border-subtle)',
           borderRadius: 20, padding: '4px 11px',
           fontFamily: 'var(--font-barlow)', fontWeight: 700,
-          fontSize: 12, color: '#666',
+          fontSize: 12, color: 'var(--text-muted)',
           display: 'flex', alignItems: 'center', gap: 4,
         }}>
           <Dumbbell size={12} /> {userData.totalWorkouts}
         </div>
+        <ThemeToggle />
       </div>
     </div>
+  )
+}
+
+function ThemeToggle() {
+  const { theme, setTheme } = useTheme()
+  const isDark = theme === 'dark' || theme === 'system' // simplistic fallback for initial render
+
+  return (
+    <button
+      onClick={() => setTheme(isDark ? 'light' : 'dark')}
+      style={{
+        background: 'transparent',
+        border: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '8px',
+        color: 'var(--text-muted)',
+        cursor: 'pointer',
+      }}
+    >
+      {isDark ? <Sun size={20} /> : <Moon size={20} />}
+    </button>
   )
 }
 
@@ -94,9 +120,9 @@ function BottomNav() {
   return (
     <div style={{
       position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 50,
-      background: 'rgba(8,8,8,0.98)',
+      background: 'var(--bg-base)',
       backdropFilter: 'blur(20px)',
-      borderTop: '1px solid rgba(255,255,255,0.07)',
+      borderTop: '1px solid var(--border-subtle)',
       display: 'flex',
       paddingTop: 8,
       paddingBottom: 'max(18px, env(safe-area-inset-bottom))',
@@ -107,25 +133,25 @@ function BottomNav() {
           <Link key={item.path} href={item.path} style={{
             flex: 1, display: 'flex', flexDirection: 'column',
             alignItems: 'center', gap: 4, padding: '6px 0',
-            textDecoration: 'none', color: active ? '#F97316' : '#444',
+            textDecoration: 'none', color: active ? 'var(--accent-primary)' : 'var(--text-muted)',
           }}>
             <span style={{ display: 'flex' }}>
               {React.cloneElement(item.icon as React.ReactElement, {
-                color: active ? '#F97316' : '#444',
+                color: active ? 'var(--accent-primary)' : 'var(--text-muted)',
                 strokeWidth: active ? 2.5 : 2
               })}
             </span>
             <span style={{
               fontFamily: 'var(--font-barlow)', fontWeight: 700,
               fontSize: 10, letterSpacing: 1.5, textTransform: 'uppercase',
-              color: active ? '#F97316' : '#444',
+              color: active ? 'var(--accent-primary)' : 'var(--text-muted)',
             }}>
               {item.label}
             </span>
             {active && (
               <div style={{
                 width: 4, height: 4, borderRadius: '50%',
-                background: '#F97316', boxShadow: '0 0 8px #F97316',
+                background: 'var(--accent-primary)', boxShadow: '0 0 8px var(--accent-primary)',
               }} />
             )}
           </Link>
@@ -141,7 +167,7 @@ function AppContent({ children }: { children: React.ReactNode }) {
   if (loading) {
     return (
       <div style={{
-        minHeight: '100vh', background: '#080808',
+        minHeight: '100vh', background: 'var(--bg-base)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}>
         <div style={{ textAlign: 'center' }}>
@@ -155,7 +181,7 @@ function AppContent({ children }: { children: React.ReactNode }) {
           }}>
             <Dumbbell color="#fff" size={32} />
           </div>
-          <p style={{ fontFamily: 'var(--font-barlow)', fontSize: 16, color: '#555', letterSpacing: 2 }}>
+          <p style={{ fontFamily: 'var(--font-barlow)', fontSize: 16, color: 'var(--text-muted)', letterSpacing: 2 }}>
             CARREGANDO...
           </p>
         </div>
@@ -173,7 +199,7 @@ function AppContent({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#080808', color: '#fff' }}>
+    <div style={{ minHeight: '100vh', background: 'var(--bg-base)', color: 'var(--text-base)' }}>
       <Header />
       <div style={{ maxWidth: 680, margin: '0 auto', padding: '20px 14px 100px' }}>
         {children}

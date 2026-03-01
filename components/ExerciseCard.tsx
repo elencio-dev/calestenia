@@ -60,7 +60,7 @@ export function ExCard({ exData, dayProgress, onUpdate, onRest, idx }: ExCardPro
   return (
     <div style={{
       ...S.card({ marginBottom: 10, opacity: isComplete ? 0.7 : 1 }),
-      border: isComplete ? '1px solid rgba(74,222,128,0.2)' : '1px solid rgba(255,255,255,0.07)',
+      border: isComplete ? '1px solid rgba(74,222,128,0.2)' : '1px solid var(--border-subtle)',
       transition: 'all 0.2s',
     }}>
       {/* Header */}
@@ -79,12 +79,12 @@ export function ExCard({ exData, dayProgress, onUpdate, onRest, idx }: ExCardPro
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
             <p style={{ ...S.title(16), flex: '0 0 auto', maxWidth: '100%' }}>{mov.name}</p>
-            {isComplete && <span style={{ fontSize: 10, color: '#4ADE80', fontFamily: 'var(--font-barlow)', fontWeight: 700, letterSpacing: 1 }}>✓ FEITO</span>}
+            {isComplete && <span style={{ fontSize: 10, color: 'var(--accent-success)', fontFamily: 'var(--font-barlow)', fontWeight: 700, letterSpacing: 1 }}>✓ FEITO</span>}
           </div>
           <p style={{ ...S.label(catColor), marginTop: 3 }}>{mov.cat.toUpperCase()}</p>
         </div>
         <Ring value={done} max={sets} size={52} color={isComplete ? '#4ADE80' : setColor} thick={4}>
-          <span style={{ fontFamily: 'var(--font-barlow)', fontWeight: 800, fontSize: 14, color: isComplete ? '#4ADE80' : '#fff' }}>
+          <span style={{ fontFamily: 'var(--font-barlow)', fontWeight: 800, fontSize: 14, color: isComplete ? 'var(--accent-success)' : 'var(--text-base)' }}>
             {done}/{sets}
           </span>
         </Ring>
@@ -98,9 +98,10 @@ export function ExCard({ exData, dayProgress, onUpdate, onRest, idx }: ExCardPro
               <button
                 onClick={handleTimedSet}
                 style={{
-                  ...S.btn(counting ? '#F97316' : '#1a1a1a', 'md'),
-                  border: counting ? 'none' : '1px solid #2a2a2a',
+                  ...S.btn(counting ? '#F97316' : 'var(--bg-elevated)', 'md'),
+                  border: counting ? 'none' : '1px solid var(--border-strong)',
                   minWidth: 120,
+                  color: 'var(--text-base)'
                 }}
               >
                 {counting ? `⏱ ${fmt(cdTime)}` : `▶ ${dur}s`}
@@ -117,14 +118,14 @@ export function ExCard({ exData, dayProgress, onUpdate, onRest, idx }: ExCardPro
                 + Série ({reps} reps)
               </button>
               {[5, 10, 15, 20].filter(v => v !== reps).slice(0, 3).map(v => (
-                <button key={v} onClick={handleSet} style={{ ...S.btn('#1a1a1a', 'sm'), border: '1px solid #2a2a2a' }}>
+                <button key={v} onClick={handleSet} style={{ ...S.btn('var(--bg-elevated)', 'sm'), border: '1px solid var(--border-subtle)', color: 'var(--text-base)' }}>
                   +{v}
                 </button>
               ))}
             </>
           )}
           {done > 0 && (
-            <button onClick={() => onUpdate(id, done - 1)} style={{ ...S.btn('#1a1a1a', 'sm'), border: '1px solid #2a2a2a' }}>
+            <button onClick={() => onUpdate(id, done - 1)} style={{ ...S.btn('var(--bg-card)', 'sm'), border: '1px solid var(--border-subtle)', color: 'var(--text-base)' }}>
               ↩
             </button>
           )}
@@ -133,7 +134,7 @@ export function ExCard({ exData, dayProgress, onUpdate, onRest, idx }: ExCardPro
 
       {/* Expanded details */}
       {expanded && (
-        <div style={{ marginTop: 14, paddingTop: 14, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+        <div style={{ marginTop: 14, paddingTop: 14, borderTop: '1px solid var(--border-subtle)' }}>
           <p style={{ ...S.label('#60A5FA'), marginBottom: 10 }}>🎯 PONTOS DE FORMA</p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 14 }}>
             {mov.cues.map((cue, i) => (
@@ -141,13 +142,13 @@ export function ExCard({ exData, dayProgress, onUpdate, onRest, idx }: ExCardPro
                 <span style={{ color: '#F97316', fontFamily: 'var(--font-barlow)', fontWeight: 700, fontSize: 12, flexShrink: 0 }}>
                   {i + 1}.
                 </span>
-                <span style={{ fontSize: 13, color: '#ccc', lineHeight: 1.5 }}>{cue}</span>
+                <span style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.5 }}>{cue}</span>
               </div>
             ))}
           </div>
 
           <p style={{ ...S.label('#60A5FA'), margin: '14px 0 8px' }}>📹 COMO EXECUTAR</p>
-          <p style={{ fontSize: 13, color: '#888', lineHeight: 1.6, margin: 0 }}>{mov.how}</p>
+          <p style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>{mov.how}</p>
 
           {mov.progression && (
             <>
@@ -156,14 +157,14 @@ export function ExCard({ exData, dayProgress, onUpdate, onRest, idx }: ExCardPro
                 {mov.progression.split(' → ').map((step, i, arr) => (
                   <span key={i} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                     <span style={{
-                      background: step === mov.name ? '#A855F722' : 'rgba(255,255,255,0.04)',
+                      background: step === mov.name ? '#A855F722' : 'var(--bg-card)',
                       border: `1px solid ${step === mov.name ? '#A855F7' : 'transparent'}`,
                       borderRadius: 6, padding: '3px 10px', fontSize: 11,
-                      color: step === mov.name ? '#A855F7' : '#777',
+                      color: step === mov.name ? '#A855F7' : 'var(--text-muted)',
                     }}>
                       {step}
                     </span>
-                    {i < arr.length - 1 && <span style={{ color: '#333', fontSize: 12 }}>→</span>}
+                    {i < arr.length - 1 && <span style={{ color: 'var(--text-muted)', fontSize: 12 }}>→</span>}
                   </span>
                 ))}
               </div>
@@ -171,9 +172,9 @@ export function ExCard({ exData, dayProgress, onUpdate, onRest, idx }: ExCardPro
           )}
 
           <div style={{ display: 'flex', gap: 16, marginTop: 14, flexWrap: 'wrap' }}>
-            <span style={{ fontSize: 12, color: '#444' }}>⏱ Descanso: <strong style={{ color: '#aaa' }}>{restTime}s</strong></span>
-            <span style={{ fontSize: 12, color: '#444' }}>{isTimed ? `⏳ Duração: ${dur}s` : `🔁 Reps: ${reps}`}</span>
-            <span style={{ fontSize: 12, color: '#444' }}>📦 Séries: {sets}</span>
+            <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>⏱ Descanso: <strong style={{ color: 'var(--text-base)' }}>{restTime}s</strong></span>
+            <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>{isTimed ? `⏳ Duração: ${dur}s` : `🔁 Reps: ${reps}`}</span>
+            <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>📦 Séries: {sets}</span>
           </div>
         </div>
       )}

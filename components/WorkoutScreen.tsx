@@ -30,14 +30,14 @@ function ChallengeWidget({ challenge, progress, onAdd }: {
           <p style={{ ...S.title(22), marginTop: 4, display: 'flex', alignItems: 'center', gap: 8 }}>{challenge.icon} {challenge.name}</p>
         </div>
         <div style={{ textAlign: 'right' }}>
-          <span style={{ ...S.title(42, done ? '#4ADE80' : '#F97316'), display: 'block' }}>{progress}</span>
-          <span style={{ fontSize: 12, color: '#555' }}>/ {challenge.target} {challenge.unit}</span>
+          <span style={{ ...S.title(42, done ? 'var(--accent-success)' : 'var(--accent-primary)'), display: 'block' }}>{progress}</span>
+          <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>/ {challenge.target} {challenge.unit}</span>
         </div>
       </div>
-      <div style={{ background: '#111', borderRadius: 999, height: 7, overflow: 'hidden', marginBottom: done ? 0 : 16 }}>
+      <div style={{ background: 'var(--bg-elevated)', borderRadius: 999, height: 7, overflow: 'hidden', marginBottom: done ? 0 : 16 }}>
         <div style={{
           width: `${pct}%`, height: '100%', borderRadius: 999,
-          background: done ? '#4ADE80' : 'linear-gradient(90deg,#F97316,#F59E0B)',
+          background: done ? 'var(--accent-success)' : 'linear-gradient(90deg,var(--accent-primary),var(--accent-warning))',
           transition: 'width 0.5s ease',
           boxShadow: `0 0 10px ${done ? '#4ADE80' : '#F97316'}88`,
         }} />
@@ -55,14 +55,14 @@ function ChallengeWidget({ challenge, progress, onAdd }: {
             type="number" min={1} max={500} value={n}
             onChange={e => setN(Math.max(1, Number(e.target.value)))}
             style={{
-              background: '#111', border: '1px solid #222', borderRadius: 8,
-              color: '#fff', fontFamily: 'var(--font-barlow)', fontWeight: 700,
+              background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: 8,
+              color: 'var(--text-base)', fontFamily: 'var(--font-barlow)', fontWeight: 700,
               fontSize: 20, width: 70, padding: '8px 12px', textAlign: 'center', outline: 'none',
             }}
           />
-          <button onClick={() => onAdd(n)} style={S.btn('#F97316')}>+ Adicionar</button>
+          <button onClick={() => onAdd(n)} style={S.btn('var(--accent-primary)')}>+ Adicionar</button>
           {[5, 10, 20, 50].map(v => (
-            <button key={v} onClick={() => onAdd(v)} style={{ ...S.btn('#1a1a1a', 'sm'), border: '1px solid #2a2a2a' }}>
+            <button key={v} onClick={() => onAdd(v)} style={{ ...S.btn('var(--bg-elevated)', 'sm'), border: '1px solid var(--border-subtle)', color: 'var(--text-base)' }}>
               +{v}
             </button>
           ))}
@@ -159,7 +159,7 @@ export function WorkoutScreen() {
           <span style={{ fontFamily: 'var(--font-barlow)', fontWeight: 700, color: phase.color, fontSize: 13, letterSpacing: 1 }}>
             FASE {phase.name} · SEMANA {weekNum}
           </span>
-          <p style={{ margin: 0, fontSize: 11, color: '#555' }}>{phase.goal}</p>
+          <p style={{ margin: 0, fontSize: 11, color: 'var(--text-muted)' }}>{phase.goal}</p>
         </div>
       </div>
 
@@ -178,8 +178,8 @@ export function WorkoutScreen() {
                 }
               }}
               style={{
-                background: active ? '#F97316' : done2 ? 'rgba(74,222,128,0.1)' : 'rgba(255,255,255,0.03)',
-                border: active ? '2px solid #F97316' : done2 ? '1px solid rgba(74,222,128,0.3)' : isToday ? '1px solid rgba(255,255,255,0.15)' : '1px solid rgba(255,255,255,0.06)',
+                background: active ? 'var(--accent-primary)' : done2 ? 'rgba(74,222,128,0.1)' : 'var(--bg-elevated)',
+                border: active ? '2px solid var(--accent-primary)' : done2 ? '1px solid rgba(74,222,128,0.3)' : isToday ? '1px solid var(--border-strong)' : '1px solid var(--border-subtle)',
                 borderRadius: 10, padding: '8px 4px',
                 cursor: getIsDayUnlocked(d) ? 'pointer' : 'not-allowed',
                 opacity: getIsDayUnlocked(d) ? 1 : 0.4,
@@ -187,10 +187,10 @@ export function WorkoutScreen() {
                 display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
               }}
             >
-              <span style={{ fontFamily: 'var(--font-barlow)', fontWeight: 700, fontSize: 11, color: active ? '#fff' : '#555', letterSpacing: 1 }}>
+              <span style={{ fontFamily: 'var(--font-barlow)', fontWeight: 700, fontSize: 11, color: active ? 'var(--bg-card)' : 'var(--text-muted)', letterSpacing: 1 }}>
                 {DN[d]}
               </span>
-              <span style={{ display: 'flex', color: done2 ? '#4ADE80' : (active ? '#fff' : '#888') }}>
+              <span style={{ display: 'flex', color: done2 ? 'var(--accent-success)' : (active ? 'var(--bg-card)' : 'var(--text-muted)') }}>
                 {!getIsDayUnlocked(d) ? <Lock size={22} /> : done2 ? <CheckCircle2 size={22} /> : getDayIcon(d)}
               </span>
               {isToday && !active && (
@@ -211,7 +211,7 @@ export function WorkoutScreen() {
             <h2 style={{ ...S.title(28), lineHeight: 1.1 }}>{prog?.theme}</h2>
           </div>
           <Ring value={pct} max={100} size={80} color={allDone ? '#4ADE80' : '#F97316'}>
-            <span style={{ fontFamily: 'var(--font-barlow)', fontWeight: 800, fontSize: 14, color: allDone ? '#4ADE80' : '#fff' }}>
+            <span style={{ fontFamily: 'var(--font-barlow)', fontWeight: 800, fontSize: 14, color: allDone ? 'var(--accent-success)' : 'var(--text-base)' }}>
               {Math.round(pct)}%
             </span>
           </Ring>
@@ -221,23 +221,23 @@ export function WorkoutScreen() {
       {/* Rest day */}
       {dayData?.rest ? (
         <div style={{
-          ...S.card({ padding: 32, textAlign: 'center', border: '1px solid rgba(255,255,255,0.05)' }),
+          ...S.card({ padding: 32, textAlign: 'center', border: '1px solid var(--border-subtle)' }),
           marginBottom: 16,
         }}>
-          <Moon size={48} color="#555" style={{ margin: '0 auto' }} />
+          <Moon size={48} color="var(--text-muted)" style={{ margin: '0 auto' }} />
           <h3 style={{ ...S.title(24), marginTop: 12 }}>{dayData.name}</h3>
-          <p style={{ color: '#555', fontSize: 14, marginTop: 8 }}>Recuperação é parte do treino. Seu corpo cresce no descanso.</p>
+          <p style={{ color: 'var(--text-muted)', fontSize: 14, marginTop: 8 }}>Recuperação é parte do treino. Seu corpo cresce no descanso.</p>
         </div>
       ) : (
         <>
           {/* Locked State Overlay */}
           {!isDayUnlocked ? (
             <div style={{
-              ...S.card({ padding: 32, textAlign: 'center', border: '1px solid rgba(255,255,255,0.05)', marginTop: 16 }),
+              ...S.card({ padding: 32, textAlign: 'center', border: '1px solid var(--border-subtle)', marginTop: 16 }),
             }}>
-              <Lock size={48} color="#555" style={{ margin: '0 auto' }} />
+              <Lock size={48} color="var(--text-muted)" style={{ margin: '0 auto' }} />
               <h3 style={{ ...S.title(24), marginTop: 12 }}>Dia Bloqueado</h3>
-              <p style={{ color: '#555', fontSize: 14, marginTop: 8 }}>
+              <p style={{ color: 'var(--text-muted)', fontSize: 14, marginTop: 8 }}>
                 Você só pode realizar o treino correspondente ao dia exato de hoje. Volte no dia correto!
               </p>
             </div>
@@ -247,16 +247,16 @@ export function WorkoutScreen() {
               <div style={{ ...S.card({ padding: '12px 18px', marginBottom: 16 }), display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div>
                   <p style={S.label()}>TEMPO DE TREINO</p>
-                  <span style={{ ...S.title(40, wRunning ? '#F97316' : '#fff'), display: 'block', marginTop: 2 }}>
+                  <span style={{ ...S.title(40, wRunning ? 'var(--accent-primary)' : 'var(--text-base)'), display: 'block', marginTop: 2 }}>
                     {fmt(wTime)}
                   </span>
                 </div>
                 <div style={{ display: 'flex', gap: 8 }}>
                   {!wRunning
-                    ? <button onClick={wStart} style={{ ...S.btn('#F97316'), display: 'flex', alignItems: 'center', gap: 4 }}><Play size={16} /> INICIAR</button>
-                    : <button onClick={wPause} style={{ ...S.btn('#333'), display: 'flex', alignItems: 'center', gap: 4 }}><Pause size={16} /> PAUSAR</button>
+                    ? <button onClick={wStart} style={{ ...S.btn('var(--accent-primary)'), display: 'flex', alignItems: 'center', gap: 4 }}><Play size={16} /> INICIAR</button>
+                    : <button onClick={wPause} style={{ ...S.btn('var(--bg-elevated)'), display: 'flex', alignItems: 'center', gap: 4, color: 'var(--text-base)' }}><Pause size={16} /> PAUSAR</button>
                   }
-                  <button onClick={wReset} style={{ ...S.btn('#1a1a1a', 'sm'), display: 'flex', alignItems: 'center', justifyContent: 'center' }}><RotateCcw size={16} /></button>
+                  <button onClick={wReset} style={{ ...S.btn('var(--bg-card)', 'sm'), display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-base)' }}><RotateCcw size={16} /></button>
                 </div>
               </div>
 
@@ -277,10 +277,10 @@ export function WorkoutScreen() {
                   borderRadius: 14, padding: '16px 20px', marginBottom: 16,
                   display: 'flex', alignItems: 'center', gap: 12,
                 }}>
-                  <Trophy size={32} color="#4ADE80" />
+                  <Trophy size={32} color="var(--accent-success)" />
                   <div>
-                    <p style={{ ...S.title(18, '#4ADE80') }}>TREINO COMPLETO!</p>
-                    <p style={{ fontSize: 12, color: '#555', marginTop: 4 }}>Excelente trabalho! Descanse e volte amanhã.</p>
+                    <p style={{ ...S.title(18, 'var(--accent-success)') }}>TREINO COMPLETO!</p>
+                    <p style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 4 }}>Excelente trabalho! Descanse e volte amanhã.</p>
                   </div>
                 </div>
               )}
