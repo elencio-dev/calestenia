@@ -22,6 +22,7 @@ model User {
   goal          String?   // health | body | strong | pro
 
   // Progress
+  hasCompletedOnboarding Boolean @default(false)
   currentWeek   Int       @default(1)
   totalWorkouts Int       @default(0)
   streak        Int       @default(0)

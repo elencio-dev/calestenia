@@ -7,6 +7,7 @@ import { useUserData, UserDataProvider } from '@/contexts/UserDataContext'
 import { getCurrentPhase } from '@/lib/program-data'
 import { Dumbbell, Flame, TrendingUp, ClipboardList, User } from 'lucide-react'
 import { EmojiIcon } from './ui'
+import { OnboardingScreen } from './OnboardingScreen'
 
 function Header() {
   const { userData } = useUserData()
@@ -135,7 +136,7 @@ function BottomNav() {
 }
 
 function AppContent({ children }: { children: React.ReactNode }) {
-  const { loading } = useUserData()
+  const { userData, setUserData, loading } = useUserData()
 
   if (loading) {
     return (
@@ -159,6 +160,15 @@ function AppContent({ children }: { children: React.ReactNode }) {
           </p>
         </div>
       </div>
+    )
+  }
+
+  if (!userData.hasCompletedOnboarding) {
+    return (
+      <OnboardingScreen onComplete={() => {
+        // Optimistically set UI and dispatch backend persisting through UserDataContext hook
+        setUserData({ hasCompletedOnboarding: true })
+      }} />
     )
   }
 

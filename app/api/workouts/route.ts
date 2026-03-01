@@ -47,8 +47,8 @@ export async function POST(req: Request) {
 
       const currentLocalDay = weekdayStr ? weekdayMap[weekdayStr] : new Date().getDay()
 
-      if (dayNumber > currentLocalDay) {
-        return NextResponse.json({ error: 'Você não pode completar treinos referentes a dias futuros da semana.' }, { status: 403 })
+      if (dayNumber !== currentLocalDay) {
+        return NextResponse.json({ error: 'Você só pode completar o treino correspondente ao dia exato de hoje no seu fuso horário.' }, { status: 403 })
       }
     }
 

@@ -139,26 +139,7 @@ export function WorkoutScreen() {
 
   // Calculate highest unlocked day for the active week
   const getIsDayUnlocked = (d: number) => {
-    // Define the correct chronological order of the standard week
-    // e.g. Seg (1), Ter (2), Qua (3), Qui (4), Sex (5), Sab (6), Dom (0)
-    // Actually, DN is ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].
-    // The typical training days are 1, 2, 4, 5 (Seg, Ter, Qui, Sex).
-    // Let's iterate in chronological order: 1, 2, 3, 4, 5, 6, 0.
-    const order = [1, 2, 3, 4, 5, 6, 0]
-
-    for (const od of order) {
-      if (od === d) return true // reached the day we are checking, so it's unlocked
-
-      const dp = prog?.days[od]
-      if (!dp || dp.rest) continue // skip rest days
-
-      if (!isDayDone(od)) {
-        // We found a non-rest day that is NOT done. 
-        // Any day after this one in the order should be locked.
-        return false
-      }
-    }
-    return true
+    return d === today
   }
 
   const isDayUnlocked = getIsDayUnlocked(selDay)
@@ -259,7 +240,7 @@ export function WorkoutScreen() {
               <Lock size={48} color="#555" style={{ margin: '0 auto' }} />
               <h3 style={{ ...S.title(24), marginTop: 12 }}>Dia Bloqueado</h3>
               <p style={{ color: '#555', fontSize: 14, marginTop: 8 }}>
-                Complete os treinos dos dias anteriores para desbloquear este treino. A consistência é a chave!
+                Você só pode realizar o treino correspondente ao dia exato de hoje. Volte no dia correto!
               </p>
             </div>
           ) : (

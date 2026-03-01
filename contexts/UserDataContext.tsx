@@ -11,6 +11,7 @@ export interface UserData {
   height?: number
   age?: number
   goal?: string
+  hasCompletedOnboarding: boolean
   currentWeek: number
   totalWorkouts: number
   streak: number
@@ -33,6 +34,7 @@ interface UserDataContextType {
 }
 
 const defaultData: UserData = {
+  hasCompletedOnboarding: false,
   currentWeek: 1,
   totalWorkouts: 0,
   streak: 0,
@@ -126,6 +128,7 @@ export function UserDataProvider({ children }: { children: ReactNode }) {
         height: user.height,
         age: user.age,
         goal: user.goal,
+        hasCompletedOnboarding: user.hasCompletedOnboarding || false,
         currentWeek: computedWeek,
         totalWorkouts: user.totalWorkouts || 0,
         streak: user.streak || 0,
@@ -153,7 +156,7 @@ export function UserDataProvider({ children }: { children: ReactNode }) {
     _setUserData(prev => ({ ...prev, ...updates }))
 
     // Persist profile/progress updates
-    const profileKeys = ['name', 'weight', 'height', 'age', 'goal', 'currentWeek', 'totalWorkouts', 'streak']
+    const profileKeys = ['name', 'weight', 'height', 'age', 'goal', 'hasCompletedOnboarding', 'currentWeek', 'totalWorkouts', 'streak']
     const profileUpdates: Record<string, unknown> = {}
     for (const key of profileKeys) {
       if (key in updates) profileUpdates[key] = (updates as Record<string, unknown>)[key]
