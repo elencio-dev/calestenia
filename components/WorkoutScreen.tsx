@@ -73,7 +73,7 @@ function ChallengeWidget({ challenge, progress, onAdd }: {
 }
 
 export function WorkoutScreen() {
-  const { userData, setUserData, updateWorkout, updateChallenge, advanceWeek } = useUserData()
+  const { userData, setUserData, updateWorkout, updateChallenge } = useUserData()
   const today = new Date().getDay()
   const [selDay, setSelDay] = useState(today)
   const [restDur, setRestDur] = useState<number | null>(null)
@@ -181,12 +181,6 @@ export function WorkoutScreen() {
           </span>
           <p style={{ margin: 0, fontSize: 11, color: '#555' }}>{phase.goal}</p>
         </div>
-        <button
-          onClick={advanceWeek}
-          style={{ ...S.btn('#1a1a1a', 'sm'), border: '1px solid #333', flexShrink: 0 }}
-        >
-          Sem {weekNum + 1} ›
-        </button>
       </div>
 
       {/* Day selector */}

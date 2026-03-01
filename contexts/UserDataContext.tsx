@@ -30,7 +30,6 @@ interface UserDataContextType {
   loading: boolean
   refetch: () => Promise<void>
   isWeekCompleted: (weekNum: number) => boolean
-  advanceWeek: () => Promise<void>
 }
 
 const defaultData: UserData = {
@@ -53,7 +52,6 @@ const UserDataContext = createContext<UserDataContextType>({
   loading: true,
   refetch: async () => { },
   isWeekCompleted: () => false,
-  advanceWeek: async () => { },
 })
 
 export function UserDataProvider({ children }: { children: ReactNode }) {
@@ -93,6 +91,33 @@ export function UserDataProvider({ children }: { children: ReactNode }) {
       // Build achievements array
       const achievementsArr = (user.achievements || []).map((a: { achievementId: string }) => a.achievementId)
 
+      // Dynamically calculate current week based on totalWorkouts
+      let computedWeek = 1
+      let remainingWorkouts = user.totalWorkouts || 0
+      const { getWeekProgram } = require('@/lib/program-data')
+
+      for (let i = 1; i <= 52; i++) {
+        const prog = getWeekProgram(i)
+        let workoutsThisWeek = 0
+        for (let d = 0; d <= 6; d++) {
+          if (prog?.days[d] && !prog.days[d].rest && (prog.days[d].exercises || []).length > 0) {
+            workoutsThisWeek++
+          }
+        }
+
+        if (workoutsThisWeek > 0) {
+          if (remainingWorkouts >= workoutsThisWeek) {
+            remainingWorkouts -= workoutsThisWeek
+            computedWeek = i + 1 // Earned next week
+          } else {
+            break // User is currently in this week
+          }
+        }
+      }
+
+      // Cap at week 52
+      if (computedWeek > 52) computedWeek = 52
+
       _setUserData({
         id: user.id,
         name: user.name,
@@ -101,7 +126,7 @@ export function UserDataProvider({ children }: { children: ReactNode }) {
         height: user.height,
         age: user.age,
         goal: user.goal,
-        currentWeek: user.currentWeek || 1,
+        currentWeek: computedWeek,
         totalWorkouts: user.totalWorkouts || 0,
         streak: user.streak || 0,
         workouts: workoutsMap,
@@ -175,15 +200,6 @@ export function UserDataProvider({ children }: { children: ReactNode }) {
     return completedDays >= totalNonRestDays && totalNonRestDays > 0
   }, [userData.workouts])
 
-  const advanceWeek = useCallback(async () => {
-    if (userData.currentWeek >= 52) return
-    if (!isWeekCompleted(userData.currentWeek)) {
-      alert('Você precisa completar todos os treinos desta semana antes de avançar.')
-      return
-    }
-    await setUserData({ currentWeek: userData.currentWeek + 1 })
-  }, [userData.currentWeek, isWeekCompleted, setUserData])
-
   const updateWorkout = useCallback(async (weekNum: number, dayNum: number, exerciseId: string, sets: number, duration = 0) => {
     _setUserData(prev => {
       const key = `w${weekNum}_d${dayNum}`
@@ -202,6 +218,8 @@ export function UserDataProvider({ children }: { children: ReactNode }) {
     _setUserData(prev => {
       const exerciseSets = prev.workouts[key] || {}
       // Save to API
+      const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'America/Sao_Paulo'
+
       fetch('/api/workouts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -210,7 +228,21 @@ export function UserDataProvider({ children }: { children: ReactNode }) {
           dayNumber: dayNum,
           duration,
           exerciseSets: { ...exerciseSets, [exerciseId]: sets },
+          userTimezone,
         }),
+      }).then(async (res) => {
+        if (!res.ok) {
+          const data = await res.json()
+          alert(`Erro ao salvar: ${data.error || 'Não foi possível registrar o treino.'}`)
+          // Rollback the local state if the server rejected it
+          _setUserData(prevRollback => ({
+            ...prevRollback,
+            workouts: {
+              ...prevRollback.workouts,
+              [key]: exerciseSets, // Restore previous state
+            }
+          }))
+        }
       }).catch(console.error)
       return prev
     })
@@ -223,11 +255,13 @@ export function UserDataProvider({ children }: { children: ReactNode }) {
       challenges: { ...prev.challenges, [key]: progress },
     }))
 
+    const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'America/Sao_Paulo'
+
     try {
       await fetch('/api/challenges', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ weekNumber: weekNum, dayNumber: dayNum, progress, target }),
+        body: JSON.stringify({ weekNumber: weekNum, dayNumber: dayNum, progress, target, userTimezone }),
       })
     } catch (error) {
       console.error('Failed to update challenge:', error)
@@ -272,7 +306,7 @@ export function UserDataProvider({ children }: { children: ReactNode }) {
     <UserDataContext.Provider value={{
       userData, setUserData, updateWorkout, updateChallenge,
       unlockSkill, unlockAchievement, loading, refetch,
-      isWeekCompleted, advanceWeek
+      isWeekCompleted
     }}>
       {children}
     </UserDataContext.Provider>

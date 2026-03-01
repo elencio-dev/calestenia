@@ -28,7 +28,30 @@ export async function POST(req: Request) {
   if (!session?.user?.id) return NextResponse.json({ error: 'Não autenticado' }, { status: 401 })
 
   try {
-    const { weekNumber, dayNumber, duration, exerciseSets, isRest } = await req.json()
+    const { weekNumber, dayNumber, duration, exerciseSets, isRest, userTimezone } = await req.json()
+
+    if (dayNumber !== undefined && userTimezone) {
+      const serverNow = new Date()
+      // Create formatter for user's timezone
+      const formatter = new Intl.DateTimeFormat('en-US', {
+        timeZone: userTimezone,
+        weekday: 'long',
+      })
+      const formatterParts = formatter.formatToParts(serverNow)
+      const weekdayStr = formatterParts.find(p => p.type === 'weekday')?.value
+
+      const weekdayMap: Record<string, number> = {
+        'Sunday': 0, 'Monday': 1, 'Tuesday': 2,
+        'Wednesday': 3, 'Thursday': 4, 'Friday': 5, 'Saturday': 6
+      }
+
+      const currentLocalDay = weekdayStr ? weekdayMap[weekdayStr] : new Date().getDay()
+
+      if (dayNumber > currentLocalDay) {
+        return NextResponse.json({ error: 'Você não pode completar treinos referentes a dias futuros da semana.' }, { status: 403 })
+      }
+    }
+
 
     const workout = await prisma.workout.upsert({
       where: {
