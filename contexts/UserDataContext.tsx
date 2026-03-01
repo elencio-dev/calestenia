@@ -12,6 +12,7 @@ export interface UserData {
   age?: number
   goal?: string
   hasCompletedOnboarding: boolean
+  hasCompletedProgram: boolean
   currentWeek: number
   totalWorkouts: number
   streak: number
@@ -35,6 +36,7 @@ interface UserDataContextType {
 
 const defaultData: UserData = {
   hasCompletedOnboarding: false,
+  hasCompletedProgram: false,
   currentWeek: 1,
   totalWorkouts: 0,
   streak: 0,
@@ -129,6 +131,7 @@ export function UserDataProvider({ children }: { children: ReactNode }) {
         age: user.age,
         goal: user.goal,
         hasCompletedOnboarding: user.hasCompletedOnboarding || false,
+        hasCompletedProgram: user.hasCompletedProgram || false,
         currentWeek: computedWeek,
         totalWorkouts: user.totalWorkouts || 0,
         streak: user.streak || 0,
@@ -156,7 +159,7 @@ export function UserDataProvider({ children }: { children: ReactNode }) {
     _setUserData(prev => ({ ...prev, ...updates }))
 
     // Persist profile/progress updates
-    const profileKeys = ['name', 'weight', 'height', 'age', 'goal', 'hasCompletedOnboarding', 'currentWeek', 'totalWorkouts', 'streak']
+    const profileKeys = ['name', 'weight', 'height', 'age', 'goal', 'hasCompletedOnboarding', 'hasCompletedProgram', 'currentWeek', 'totalWorkouts', 'streak']
     const profileUpdates: Record<string, unknown> = {}
     for (const key of profileKeys) {
       if (key in updates) profileUpdates[key] = (updates as Record<string, unknown>)[key]
@@ -203,53 +206,7 @@ export function UserDataProvider({ children }: { children: ReactNode }) {
     return completedDays >= totalNonRestDays && totalNonRestDays > 0
   }, [userData.workouts])
 
-  const updateWorkout = useCallback(async (weekNum: number, dayNum: number, exerciseId: string, sets: number, duration = 0) => {
-    _setUserData(prev => {
-      const key = `w${weekNum}_d${dayNum}`
-      const current = prev.workouts[key] || {}
-      return {
-        ...prev,
-        workouts: {
-          ...prev.workouts,
-          [key]: { ...current, [exerciseId]: sets },
-        },
-      }
-    })
 
-    // Get current exercise sets for this workout
-    const key = `w${weekNum}_d${dayNum}`
-    _setUserData(prev => {
-      const exerciseSets = prev.workouts[key] || {}
-      // Save to API
-      const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'America/Sao_Paulo'
-
-      fetch('/api/workouts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          weekNumber: weekNum,
-          dayNumber: dayNum,
-          duration,
-          exerciseSets: { ...exerciseSets, [exerciseId]: sets },
-          userTimezone,
-        }),
-      }).then(async (res) => {
-        if (!res.ok) {
-          const data = await res.json()
-          alert(`Erro ao salvar: ${data.error || 'Não foi possível registrar o treino.'}`)
-          // Rollback the local state if the server rejected it
-          _setUserData(prevRollback => ({
-            ...prevRollback,
-            workouts: {
-              ...prevRollback.workouts,
-              [key]: exerciseSets, // Restore previous state
-            }
-          }))
-        }
-      }).catch(console.error)
-      return prev
-    })
-  }, [])
 
   const updateChallenge = useCallback(async (weekNum: number, dayNum: number, progress: number, target: number) => {
     const key = `ch_w${weekNum}_d${dayNum}`
@@ -304,6 +261,87 @@ export function UserDataProvider({ children }: { children: ReactNode }) {
       console.error('Failed to unlock achievement:', error)
     }
   }, [])
+
+  const updateWorkout = useCallback(async (weekNum: number, dayNum: number, exerciseId: string, sets: number, duration = 0) => {
+    _setUserData(prev => {
+      const key = `w${weekNum}_d${dayNum}`
+      const current = prev.workouts[key] || {}
+      return {
+        ...prev,
+        workouts: {
+          ...prev.workouts,
+          [key]: { ...current, [exerciseId]: sets },
+        },
+      }
+    })
+
+    // Get current exercise sets for this workout
+    const key = `w${weekNum}_d${dayNum}`
+    _setUserData(prev => {
+      const exerciseSets = prev.workouts[key] || {}
+      // Save to API
+      const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'America/Sao_Paulo'
+
+      fetch('/api/workouts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          weekNumber: weekNum,
+          dayNumber: dayNum,
+          duration,
+          exerciseSets: { ...exerciseSets, [exerciseId]: sets },
+          userTimezone,
+        }),
+      }).then(async (res) => {
+        if (!res.ok) {
+          const data = await res.json()
+          alert(`Erro ao salvar: ${data.error || 'Não foi possível registrar o treino.'}`)
+          // Rollback the local state if the server rejected it
+          _setUserData(prevRollback => ({
+            ...prevRollback,
+            workouts: {
+              ...prevRollback.workouts,
+              [key]: exerciseSets, // Restore previous state
+            }
+          }))
+        } else {
+          // If we're on week 52, check completion over the flushed state
+          if (weekNum === 52) {
+            setTimeout(() => {
+              _setUserData(currentData => {
+                if (!currentData.hasCompletedProgram) {
+                  const { getWeekProgram } = require('@/lib/program-data')
+                  const prog = getWeekProgram(52)
+                  let completedDays = 0
+                  let totalNonRestDays = 0
+                  for (let d = 0; d <= 6; d++) {
+                    const dp = prog?.days[d]
+                    if (!dp || dp.rest) continue
+                    totalNonRestDays++
+                    const k = `w52_d${d}`
+                    const dayProg = currentData.workouts[k] || {}
+                    const exs = dp.exercises || []
+                    if (exs.length === 0) continue
+                    const ts = exs.reduce((a: any, e: any) => a + e.sets, 0)
+                    const ds = exs.reduce((a: any, e: any) => a + Math.min(e.sets, dayProg[e.id] ?? 0), 0)
+                    if (ds === ts && ts > 0) completedDays++
+                  }
+
+                  if (completedDays >= totalNonRestDays && totalNonRestDays > 0) {
+                    // All workouts for week 52 are fully verified in state!
+                    setUserData({ hasCompletedProgram: true })
+                    unlockAchievement('week52')
+                  }
+                }
+                return currentData
+              })
+            }, 500)
+          }
+        }
+      }).catch(console.error)
+      return prev
+    })
+  }, [setUserData, unlockAchievement])
 
   return (
     <UserDataContext.Provider value={{

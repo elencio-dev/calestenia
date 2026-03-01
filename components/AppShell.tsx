@@ -9,6 +9,8 @@ import { Dumbbell, Flame, TrendingUp, ClipboardList, User, Moon, Sun } from 'luc
 import { useTheme } from 'next-themes'
 import { LucideIcon } from './ui'
 import { OnboardingScreen } from './OnboardingScreen'
+import { CompletionModal } from './CompletionModal'
+import { useState, useEffect } from 'react'
 
 function Header() {
   const { userData } = useUserData()
@@ -163,6 +165,21 @@ function BottomNav() {
 
 function AppContent({ children }: { children: React.ReactNode }) {
   const { userData, setUserData, loading } = useUserData()
+  const [showProModal, setShowProModal] = useState(false)
+
+  useEffect(() => {
+    if (userData.hasCompletedProgram) {
+      const dismissed = localStorage.getItem('proModalDismissed')
+      if (!dismissed) {
+        setShowProModal(true)
+      }
+    }
+  }, [userData.hasCompletedProgram])
+
+  const handleDismissPro = () => {
+    localStorage.setItem('proModalDismissed', 'true')
+    setShowProModal(false)
+  }
 
   if (loading) {
     return (
@@ -201,6 +218,7 @@ function AppContent({ children }: { children: React.ReactNode }) {
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg-base)', color: 'var(--text-base)' }}>
       <Header />
+      <CompletionModal isOpen={showProModal} onClose={handleDismissPro} />
       <div style={{ maxWidth: 680, margin: '0 auto', padding: '20px 14px 100px' }}>
         {children}
       </div>

@@ -33,7 +33,7 @@ export async function PATCH(req: Request) {
 
   try {
     const body = await req.json()
-    const allowed = ['name', 'weight', 'height', 'age', 'goal', 'currentWeek', 'totalWorkouts', 'streak', 'lastWorkout', 'hasCompletedOnboarding']
+    const allowed = ['name', 'weight', 'height', 'age', 'goal', 'currentWeek', 'totalWorkouts', 'streak', 'lastWorkout', 'hasCompletedOnboarding', 'hasCompletedProgram']
     const data: Record<string, unknown> = {}
     for (const key of allowed) {
       if (key in body) data[key] = body[key]

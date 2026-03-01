@@ -84,6 +84,18 @@ export function WorkoutScreen() {
   const dayData = prog?.days[selDay]
   const phase = getCurrentPhase(weekNum)
 
+  // Assuming selWeek and currentDayOfWeek are defined elsewhere or implicitly handled.
+  // For the purpose of this change, we'll use weekNum as selWeek and today as currentDayOfWeek.
+  const selWeek = weekNum; // Placeholder, assuming selWeek refers to the currently displayed week
+  const currentDayOfWeek = today; // Placeholder, assuming currentDayOfWeek refers to today's day index
+
+  const isFutureWeek = !userData.hasCompletedProgram && selWeek > userData.currentWeek
+  const isLockedFutureDay = !userData.hasCompletedProgram && selWeek === userData.currentWeek && selDay !== null && selDay !== currentDayOfWeek
+
+  const selDayData = selDay !== null && prog ? prog.days[selDay] : null
+  const isRest = selDayData?.rest || false
+  const canStart = !isRest && (!isLockedFutureDay) && (!isFutureWeek)
+
   const wKey = `w${weekNum}_d${selDay}`
   const dayProg = userData.workouts[wKey] || {}
   const exs = dayData?.exercises || []
@@ -138,6 +150,7 @@ export function WorkoutScreen() {
   }
 
   const getIsDayUnlocked = (d: number) => {
+    if (userData.hasCompletedProgram) return true
     return d === today
   }
 
