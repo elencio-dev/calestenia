@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { S, Badge, EmojiIcon } from './ui'
+import { S, Badge, LucideIcon } from './ui'
 import { useUserData } from '@/contexts/UserDataContext'
 import { PHASES_INFO, getWeekProgram, getCurrentPhase } from '@/lib/program-data'
 
@@ -45,7 +45,7 @@ export function ProgramScreen() {
                 transition: 'all 0.2s',
               }}
             >
-              <EmojiIcon emoji={phase.icon} size={28} />
+              <LucideIcon name={phase.icon} size={28} />
               <div style={{ flex: 1, textAlign: 'left' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
                   <span style={{
@@ -153,7 +153,7 @@ export function ProgramScreen() {
           { icon: '📈', title: 'Paciência + Consistência', desc: '52 semanas parece muito. São só 4 dias por semana. Você consegue.' },
         ].map(p => (
           <div key={p.title} style={{ display: 'flex', gap: 12, marginBottom: 12, alignItems: 'flex-start' }}>
-            <span style={{ flexShrink: 0 }}><EmojiIcon emoji={p.icon} size={22} color="#ccc" /></span>
+            <span style={{ flexShrink: 0 }}><LucideIcon name={p.icon} size={22} color="#ccc" /></span>
             <div>
               <p style={{ fontFamily: 'var(--font-barlow)', fontWeight: 700, fontSize: 14, color: '#ccc', margin: 0 }}>{p.title}</p>
               <p style={{ fontSize: 12, color: '#555', margin: '3px 0 0', lineHeight: 1.5 }}>{p.desc}</p>

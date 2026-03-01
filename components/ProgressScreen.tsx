@@ -1,6 +1,6 @@
 'use client'
 
-import { S, Badge, EmojiIcon } from './ui'
+import { S, Badge, LucideIcon } from './ui'
 import { useUserData } from '@/contexts/UserDataContext'
 import { CheckCircle2 } from 'lucide-react'
 import { getCurrentPhase, PHASES_INFO, ACHIEVEMENTS_DEF } from '@/lib/program-data'
@@ -41,7 +41,7 @@ export function ProgressScreen() {
         borderRadius: 14, padding: 20, marginBottom: 16,
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 14 }}>
-          <EmojiIcon emoji={phase.icon} size={36} color={phase.color} />
+          <LucideIcon name={phase.icon} size={36} color={phase.color} />
           <div>
             <p style={{ ...S.label(phase.color) }}>FASE ATUAL</p>
             <h2 style={{ ...S.title(28, phase.color), marginTop: 4 }}>{phase.name}</h2>
@@ -78,7 +78,7 @@ export function ProgressScreen() {
               : 0
             return (
               <div key={p.id} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <span style={{ flexShrink: 0 }}><EmojiIcon emoji={p.icon} size={16} color={isActive ? p.color : isPast ? '#4ADE80' : '#444'} /></span>
+                <span style={{ flexShrink: 0 }}><LucideIcon name={p.icon} size={16} color={isActive ? p.color : isPast ? '#4ADE80' : '#444'} /></span>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
                     <span style={{
@@ -146,7 +146,7 @@ export function ProgressScreen() {
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
                   <span style={{ display: 'flex' }}>
-                    {unlocked ? <CheckCircle2 size={24} color="#4ADE80" /> : <EmojiIcon emoji={skill.icon} size={24} color="#666" />}
+                    {unlocked ? <CheckCircle2 size={24} color="#4ADE80" /> : <LucideIcon name={skill.icon} size={24} color="#666" />}
                   </span>
                   {unlocked && <Badge color="#4ADE80" sm>DESBLOQUEADO</Badge>}
                 </div>
@@ -176,7 +176,7 @@ export function ProgressScreen() {
               border: '1px solid rgba(249,115,22,0.2)',
               borderRadius: 10, padding: '10px 14px',
             }}>
-              <EmojiIcon emoji={a.icon} size={24} color="#F97316" />
+              <LucideIcon name={a.icon} size={24} color="#F97316" />
               <div>
                 <p style={{ fontFamily: 'var(--font-barlow)', fontWeight: 700, fontSize: 14, color: '#F97316', margin: 0 }}>{a.name}</p>
                 <p style={{ fontSize: 12, color: '#555', margin: '2px 0 0' }}>{a.desc}</p>
@@ -190,7 +190,7 @@ export function ProgressScreen() {
               border: '1px solid rgba(255,255,255,0.05)',
               borderRadius: 10, padding: '10px 14px',
             }}>
-              <EmojiIcon emoji={a.icon} size={24} color="#444" />
+              <LucideIcon name={a.icon} size={24} color="#444" />
               <div>
                 <p style={{ fontFamily: 'var(--font-barlow)', fontWeight: 700, fontSize: 14, color: '#444', margin: 0 }}>{a.name}</p>
                 <p style={{ fontSize: 12, color: '#333', margin: '2px 0 0' }}>{a.desc}</p>

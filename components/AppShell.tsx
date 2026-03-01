@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { useUserData, UserDataProvider } from '@/contexts/UserDataContext'
 import { getCurrentPhase } from '@/lib/program-data'
 import { Dumbbell, Flame, TrendingUp, ClipboardList, User } from 'lucide-react'
-import { EmojiIcon } from './ui'
+import { LucideIcon } from './ui'
 import { OnboardingScreen } from './OnboardingScreen'
 
 function Header() {
@@ -50,7 +50,7 @@ function Header() {
             fontFamily: 'var(--font-barlow)', fontWeight: 700,
             display: 'flex', alignItems: 'center', gap: 4
           }}>
-            SEM. {userData.currentWeek} · <EmojiIcon emoji={phase.icon} size={10} color="#666" /> {phase.name}
+            SEM. {userData.currentWeek} · <LucideIcon name={phase.icon} size={10} color="#666" /> {phase.name}
           </p>
         </div>
       </div>

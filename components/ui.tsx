@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { Trophy, Pickaxe, Zap, Flame, Target, Rocket, Activity, Dumbbell, Star, Swords, Sword, Calendar, Shield, Flag, CheckCircle2 } from 'lucide-react'
+import { Trophy, Compass, ArrowRight, ArrowLeftRight, Crown, CornerRightUp, Star, Circle, Hand, Target, Rocket, Activity, Dumbbell, Swords, Sword, Calendar, Shield, Flag, CheckCircle2, Moon, Sparkles, Scale, HeartPulse, SquareActivity, Maximize, PlayCircle, Zap, BicepsFlexed } from 'lucide-react'
 
 // Design tokens
 export const S = {
@@ -74,14 +74,17 @@ export function Badge({ color = '#F97316', children, sm }: { color?: string; chi
 export const fmt = (s: number) =>
   `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`
 
-export function EmojiIcon({ emoji, size = 20, color = "currentColor" }: { emoji: string, size?: number, color?: string }) {
+export function LucideIcon({ name, size = 20, color = "currentColor" }: { name: string, size?: number, color?: string }) {
   const map: Record<string, any> = {
-    '🏆': Trophy, '🌱': Pickaxe, '⚡': Zap, '🔥': Flame, '💪': Dumbbell,
-    '🎯': Target, '🚀': Rocket, '💥': Zap, '👑': Trophy, '🌟': Star,
-    '🌠': Star, '🏋️': Dumbbell, '🏃': Activity, '👟': Activity, '📅': Calendar,
-    '📆': Calendar, '🧱': Shield, '🏰': Shield, '⚔️': Swords, '🗡️': Sword,
-    '🤸': Activity, '🔫': Target, '🚩': Flag, '✅': CheckCircle2
+    'Trophy': Trophy, 'Activity': Activity, 'Zap': Zap, 'Flame': Zap,
+    'Dumbbell': Dumbbell, 'Target': Target, 'Rocket': Rocket, 'Star': Star,
+    'Calendar': Calendar, 'Shield': Shield, 'Swords': Swords, 'Sword': Sword,
+    'Flag': Flag, 'CheckCircle2': CheckCircle2, 'Moon': Moon, 'Scale': Scale,
+    'HeartPulse': HeartPulse, 'SquareActivity': SquareActivity, 'Maximize': Maximize,
+    'PlayCircle': PlayCircle, 'Compass': Compass, 'ArrowRight': ArrowRight,
+    'ArrowLeftRight': ArrowLeftRight, 'Crown': Crown, 'CornerRightUp': CornerRightUp,
+    'Circle': Circle, 'Hand': Hand, 'BicepsFlexed': BicepsFlexed, 'Sparkles': Sparkles
   }
-  const Comp = map[emoji] || Dumbbell
+  const Comp = map[name] || Dumbbell
   return <span style={{ display: 'inline-flex', alignItems: 'center' }}><Comp size={size} color={color} /></span>
 }

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { S, Ring, fmt, EmojiIcon } from './ui'
+import { S, Ring, fmt, LucideIcon } from './ui'
 import { useCountdown } from '@/hooks/useTimer'
 import { MOV, ExerciseEntry } from '@/lib/program-data'
 import { CheckCircle2 } from 'lucide-react'
@@ -74,7 +74,7 @@ export function ExCard({ exData, dayProgress, onUpdate, onRest, idx }: ExCardPro
           border: `1px solid ${isComplete ? 'rgba(74,222,128,0.3)' : catColor + '33'}`,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}>
-          {isComplete ? <CheckCircle2 size={24} color="#4ADE80" /> : <EmojiIcon emoji={mov.icon} size={24} color={catColor} />}
+          {isComplete ? <CheckCircle2 size={24} color="#4ADE80" /> : <LucideIcon name={mov.icon} size={24} color={catColor} />}
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>

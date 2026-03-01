@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { S, Ring, fmt } from './ui'
 import { RestOverlay } from './RestOverlay'
 import { ExCard } from './ExerciseCard'
@@ -137,7 +137,6 @@ export function WorkoutScreen() {
     return ds === ts
   }
 
-  // Calculate highest unlocked day for the active week
   const getIsDayUnlocked = (d: number) => {
     return d === today
   }
@@ -164,7 +163,6 @@ export function WorkoutScreen() {
         </div>
       </div>
 
-      {/* Day selector */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7,1fr)', gap: 5, marginBottom: 18 }}>
         {[1, 2, 3, 4, 5, 6, 0].map(d => {
           const dp = prog?.days[d]
