@@ -314,6 +314,15 @@ export function WorkoutScreen() {
 
               {/* Exercises */}
               <div>
+                {exs.map((e, i) => (
+                  <ExCard
+                    key={e.id}
+                    exData={e}
+                    dayProgress={dayProg}
+                    onUpdate={handleUpdExercise}
+                    onRest={setRestDur}
+                    idx={i}
+                  />
                 ))}
               </div>
             </>
